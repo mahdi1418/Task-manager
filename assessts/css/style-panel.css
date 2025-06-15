@@ -34,6 +34,7 @@
         max-width: 1000px !important;
         width: 100%;
         transition: all 0.3s ease;
+        margin-top: 80px;
     }
 
     h1 {
@@ -67,11 +68,11 @@
     }
 
     .priority-medium {
-        border-left: 8px solid #ffa502;
+        border-left: 8px solid #ffa502 !important;
     }
 
     .priority-low {
-        border-left: 8px solid #2ed573;
+        border-left: 8px solid #2ed573 !important;
     }
 
     .add-button {
@@ -87,6 +88,7 @@
         font-size: 25px;
         box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
         cursor: pointer;
+        padding-bottom: 5px;
     }
 
     .add-button:hover {
@@ -181,6 +183,7 @@
         width: 100% !important;
         right: 0 !important;
         margin-left: -630px;
+        margin-bottom: 100px !important;
     }
 
     .header button {

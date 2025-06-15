@@ -5,18 +5,18 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 if (isset($_SESSION['user'])) {
-    header('location: ../templates/panel.php');
+    header('location: panel.php');
 }
 ?>
 <!DOCTYPEhtml>
     <html>
 
         <head>
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <link href="../assessts/css/bootstrap.min.css" rel="stylesheet">
-            <link href="../assessts/css/all.min.css" rel="stylesheet">
-            <link href="../assessts/css/style.css" rel="stylesheet">
-            <script src="../assessts/js/bootstrap.bundle.min.js"></script>
+       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link href="../assessts/css/bootstrap.min.css" rel="stylesheet">
+      <link href="../assessts/css/all.min.css" rel="stylesheet">
+      <link href="../assessts/css/style.css" rel="stylesheet">
+      <script src="../assessts/js/bootstrap.bundle.min.js"></script>
             <title> Login </title>
         </head>
 
@@ -33,7 +33,7 @@ if (isset($_SESSION['user'])) {
             <?php endif; ?>
             <div class="container" id="form-container">
                 <h2>Login</h2>
-                <form action="../inc/handle.php" method="POST">
+                <form action="../handle.php" method="POST">
                     <input type="email" placeholder="email" name="email" required>
                     <input type="password" placeholder="password" name="password" required>
                     <input type="hidden" name="type" value="login">

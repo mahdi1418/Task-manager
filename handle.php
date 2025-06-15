@@ -3,14 +3,16 @@
 if (isset($_POST['submit'])) {
     $type = $_POST['type'];
     if ($type == 'register') {
-        require_once 'register.php';
+        require_once 'inc/register.php';
     } else if ($type == 'login') {
-        require_once 'login.php';
+        require_once 'inc/log-in.php';
     } else {
-        header('location: ../index.php');
+        header('location: index.php');
     }
 } else {
-    header('location: ../index.php');
+    header('location: index.php');
 }
+
+
 
 ?>
