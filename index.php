@@ -8,6 +8,27 @@ if (isset($_SESSION['user'])) {
   header('location: templates/panel.php');
 }
 
+// $request = $_REQUEST['q'];
+
+// $requests = explode('/',$request);
+
+// $first = $requests[0];
+
+// $routes = [
+//     'register' => 'index.php',
+//     '' => 'index.php',
+//     'sign' => 'index.php',
+//     'edit' => 'templates/panel.php',
+//     'login' => 'templates/login.php'
+// ];
+
+// if(isset($routes[$first])){
+//     require_once $routes[$first];
+// }else{
+//     header('location: ');
+// }
+
+
 // require_once 'templates/header.php'
 ?>
 <!DOCTYPE html>

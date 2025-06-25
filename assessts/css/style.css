@@ -13,16 +13,15 @@
         padding: 40px;
         border-radius: 20px;
         box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-        width: 450px;
-        display: flex;
+        width: 450px !important;
         text-align: center;
+        display: block !important;
     }
-.alert{
-    display: block;
-}
+
     h2 {
         color: #d63384;
         margin-bottom: 20px;
+        display: block;
     }
 
     input {

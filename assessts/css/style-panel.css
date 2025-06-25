@@ -75,10 +75,22 @@
         border-left: 8px solid #2ed573 !important;
     }
 
+    .color-high {
+        color: #ff6b6b;
+    }
+
+    .color-medium {
+        color: #ffa502 !important;
+    }
+
+    .color-low {
+        color: #2ed573 !important;
+    }
+
     .add-button {
         position: fixed;
         bottom: 30px;
-        right: 30px;
+        left: 30px;
         background-color: var(--add-btn-bg);
         color: white;
         border: none;
@@ -93,21 +105,6 @@
 
     .add-button:hover {
         background-color: #ff4da6;
-    }
-
-    .dark-toggle {
-        top: 20px;
-        left: 20px;
-        padding: 10px 20px;
-        border-radius: 20px;
-        background-color: #d63384;
-        color: #fff;
-        border: none;
-        cursor: pointer;
-        font-size: 14px;
-        left: 20px;
-        top: 50%;
-        transform: translateY(-50%);
     }
 
     .modal {
@@ -174,38 +171,128 @@
 
 
     .header {
-        background: #fff0f5;
-        color: #fff;
-        padding: 35px 20px;
+        background-color: var(--container-bg);
+        padding: 15px 20px;
         align-items: center;
         position: fixed;
         top: 0 !important;
         width: 100% !important;
         right: 0 !important;
         margin-left: -630px;
-        margin-bottom: 100px !important;
+        display: flex;
+        justify-content: space-between;
     }
 
     .header button {
-        background: #fff;
-        color: #ff69b4;
+        background-color: var(--bg-color);
         border: none;
-        padding: 8px 15px;
-        border-radius: 5px;
+        color: var(--text-color);
+        cursor: pointer;
+        font-size: 14px;
+        padding: 10px 20px;
+        border-radius: 20px;
+        z-index: 100;
+    }
+    .header .bars{
+        background-color: transparent;
+        font-size: 16px;
+    }
+    .header li:hover button{
+        background-color: #f8f8f8;
+        color: #ff69b4;
+    }
+
+    .header li:hover i{
+        color: #ff69b4;
+    }
+    .header li:hover a{
+        color: #ff69b4 !important;
+    }
+
+
+
+    .menu-container {
+        background-color: var(--container-bg);
+        color: var(--text-color);
+        display: none;
+        top: 0;
+        right: 0;
+        height: 100vh;
+        border-left: 1px solid #d63384;
+        border-top: 1px solid #d63384;
+        border-radius: 10px 0 10px 0;
+        margin-top: 73px;
+        width: 480px;
+        overflow: hidden;
+    }
+
+    .menu {
+        list-style: none;
+        padding: 0;
+    }
+    .header .menu li {
+        padding: 12px 100px 12px 20px;
+        text-wrap: nowrap;
+    }
+    .header .menu li:hover:not(:first-child) {
+        background-color: #f8f8f8;
+        color: black;
+    }
+    .header li a,
+    .header li p{
+         color: var(--text-color) !important;
+    }
+    .header li button{
+        background-color: transparent;
+        padding: 0;
+        font-size: 1rem;
+    }
+    #photo{
+        width: 50px;
+        height: 50px;
+        overflow: hidden !important;
+        border-radius: 50%;
+        border: 1px dashed #d63384;
+    }
+    #file{
+        display: none;
+    }
+
+    .t-none {
+        text-decoration: none !important;
+    }
+
+    .cursor-pointer {
         cursor: pointer;
     }
 
-    .header button:hover {
-        background: #f8f8f8;
+    i {
+        color: var(--text-color);
     }
-    .exit{
-        right: 20px;
-        top: 50%;
-        text-decoration: none;
-        transform: translateY(-50%);
-    }
-    .exit a{
-        text-decoration: none;
-        color: #ff69b4;
 
+    .btn {
+        padding: 10px 20px;
+        font-size: 16px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        color: white;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        background-color: #f44336;
+    }
+    .alert{
+        top: 50px !important;
+        right: 50%;
+        transform: translateX(50%);
+    }
+    .laye {
+        position: absolute;
+        height: 500vh;
+        right: 0;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        display: none;
+        background-color: #0c0c0c8d !important;
     }

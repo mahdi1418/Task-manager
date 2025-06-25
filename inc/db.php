@@ -34,29 +34,34 @@ function db_insert($table_name , $input_array = array()){
     return $result;
 }
 
-// function db_delete($table_name, $input_array){
-//     $connection = db_connection();
-//     $where_string = '';
+function db_delete($table_name, $input_array){
+    $connection = db_connection();
+    $where_string = '';
     
+    $array_length = count($input_array);
+    $i = 1;
+
+    foreach($input_array as $key => $value){
+        $where_string .= "$key='$value'";
+
+        if($i < $array_length){
+            $where_string .= ' AND ';
+        }
+        $i++;
+    }
+
+    $sql = "DELETE FROM $table_name WHERE $where_string";
+    $result = mysqli_query($connection,$sql);
+    return $result;
+}
+
+// function db_update($table_name,$input_array,$where){
+//     $connection = db_connection();
+//     $keys_string = '';
+//     $values_string = '';
 //     $array_length = count($input_array);
 //     $i = 1;
 
-//     foreach($input_array as $key => $value){
-//         $where_string .= "$key='$value'";
-
-//         if($i < $array_length){
-//             $where_string .= ' AND ';
-//         }
-//         $i++;
-//     }
-
-//     $sql = "DELETE FROM $table_name WHERE $where_string";
-//     $result = mysqli_query($connection,$sql);
-//     return $result;
-
-
-// function db_update($table_name,$new_data,$where){
-//     $connection = db_connection();
 // }
 
 function db_select($sql){
@@ -73,5 +78,4 @@ function db_select_one($sql){
 }
 
 
-    // $output = mysqli_fetch_row($result);
 ?>

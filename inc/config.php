@@ -8,7 +8,7 @@ $config = [
         'password' => '',
         'host' => 'localhost'
     ],
-    'base_url' => 'http://localhost/Tasks'
+    'base_url' => 'http://localhost/task-manager/'
 ];
 
 
