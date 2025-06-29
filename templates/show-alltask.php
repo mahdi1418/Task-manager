@@ -13,6 +13,7 @@ $conn = db_connection();
 $check = mysqli_query($conn, "SELECT * FROM `task` WHERE `user_id` = '$userNumber'");
 $num_rows = mysqli_num_rows($check);
 $output = mysqli_fetch_all($check, MYSQLI_NUM);
+$darkMode = isset($_COOKIE['darkMode']) && $_COOKIE['darkMode'] ==='on';
 
 ?>
 <!DOCTYPE html>
@@ -43,14 +44,18 @@ $output = mysqli_fetch_all($check, MYSQLI_NUM);
                 right: 50px;
                 top: 50px;
                 background-color: var(--container-bg);
+                color: var(--text-color) !important;
                 border-radius: 20px;
                 padding: 10px;
             }
         </style>
     </head>
 
-    <body>
-
+    <body class="<?php if($darkMode){
+        echo 'dark-mode';
+    }else{
+        echo '';
+    } ?>">
     <a href="panel.php" class="t-none text-dark">🚪Exit</a>
 
         <div id="task-list" class="container m-0">

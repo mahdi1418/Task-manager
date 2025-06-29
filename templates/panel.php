@@ -18,10 +18,10 @@ $check2 = mysqli_query($conn, "SELECT * FROM `users` WHERE `user_id` = '$userNum
 $num_rows2 = mysqli_num_rows($check2);
 $output2 = mysqli_fetch_row($check2);
 
+$darkMode = isset($_COOKIE['darkMode']) && $_COOKIE['darkMode'] ==='on';
 ?>
 <!DOCTYPE html>
-<html">
-
+<html lang="en">
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="../assessts/css/bootstrap.min.css" rel="stylesheet">
@@ -31,6 +31,7 @@ $output2 = mysqli_fetch_row($check2);
         <script src="../assessts/js/jquery-3.7.1.min.js"></script>
         <script src="../assessts/js/bootstrap.bundle.min.js"></script>
         <script src="../assessts/js/main.js"></script>
+        <meta charset="UTF-8">
         <title>Task Manager</title>
         <style>
             .delete {
@@ -39,10 +40,21 @@ $output2 = mysqli_fetch_row($check2);
         </style>
     </head>
 
-    <body>
+    <body class="<?php if($darkMode){
+        echo 'dark-mode';
+    }else{
+        echo '';
+    } ?>">
         <div class="laye"></div>
         <div class="header">
-            <button class="" onclick="toggleDark()">Dark mod 🌓</button>
+            <div class="position-relative">
+                <button id="mode" status="0">Dark mod 🌓</button>       
+                <form action="task.php" method="POST" class="mode position-absolute">
+                    <input type="hidden" name="mode" value="toggleDarkMode">
+                    <button type="submit" name="darkModeBtn"><?php if($darkMode){echo 'light'; }else{echo 'dark';} ?></button>
+                </form>
+            </div>
+  
             <button class="bars"><i class="fa-solid fa-bars" status="0"></i></button>
 
             <div class="menu-container position-absolute">
@@ -51,13 +63,14 @@ $output2 = mysqli_fetch_row($check2);
                     <li>
                         <i class="fas fa-camera me-3"></i><button id="upload">upload a photo</button>
                         <form action="task.php" method="POST" enctype="multipart/form-data" id="file">
-                            <input type="file" name="files">
-                            <button type="submit" name="uploadfile" class="border p-2">upload</button>
+                            <input type="file" name="files" id="files">
+                            <button type="submit" name="uploadfile" class="border p-2 up">upload</button>
                         </form>
                 </li>
-                    <li><i class="fas fa-plus me-3"></i><button onclick="openModal()">add a task</button></li>
-                    <li><i class="fa-solid fa-quote-right me-2"></i><a href="show-alltask.php" class="t-none">Show all tasks</a></li>
-                    <li><i class="fas fa-pen me-2"></i><a href="" class="t-none">edit a task</a></li>
+                    <li><button onclick="openModal()"><i class="fas fa-plus me-3"></i>add a task</button></li>
+                    <li><a href="show-alltask.php" class="t-none"><i class="fa-solid fa-quote-right me-2"></i>Show all tasks</a></li>
+                    <li><a href="" class="t-none"><i class="fas fa-pen me-2"></i>edit a task</a></li>
+                    <li><a href="" class="t-none"><i class="fas fa-cog me-2"></i>settings</a></li>
                     <li></li>
                     <li class="exit"><a href="logout.php" class="t-none">🚪Sign out</a></li>
                 </ul>
@@ -85,10 +98,9 @@ $output2 = mysqli_fetch_row($check2);
                 ?>
                     <div class="task <?php echo $border; ?>">
                         <input status="" type="checkbox">
-                        <label><a class="t-none p-2 <?php echo $color; ?>" href="<?php echo $config['base_url']; ?>/templates/edit-task.php?t_id=<?php echo $out[$i][0]; ?>&t_title=<?php echo $out[$i][1]; ?>&t_border=<?php echo $border; ?>"><?php echo $out[$i][1]; ?></a></label>
+                        <label><a class="t-none p-2 <?php echo $color; ?>" href="<?php echo $config['base_url']; ?>templates/edit-task.php?t_id=<?php echo $out[$i][0]; ?>&t_title=<?php echo $out[$i][1]; ?>&t_border=<?php echo $border; ?>"><?php echo $out[$i][1]; ?></a></label>
                         <div class="delete">
-                            <a href="<?php echo $config['base_url']; ?>/templates/task.php?n_id=<?php echo $out[$i][0] ?>" class="cursor-pointer btn">Delete</a>
-                            <!-- <a href="#"></a> -->
+                            <a href="<?php echo $config['base_url']; ?>templates/task.php?n_id=<?php echo $out[$i][0] ?>" class="cursor-pointer btn">Delete</a>
                         </div>
                         <i class="fas fa-ellipsis-v px-3 py-2 mt-2 pe-1 cursor-pointer"></i>
                     </div>
@@ -104,7 +116,7 @@ $output2 = mysqli_fetch_row($check2);
             <div class="modal" id="taskModal">
                 <div class="modal-content">
                     <h3 style="color:#d63384;text-align:center;">add task</h3>
-                    <input type="text" id="taskTitle" placeholder="title" name="title">
+                    <input type="text" id="taskTitle" placeholder="title" name="title" required>
                     <select id="taskPriority" name="option">
                         <option value="high">important</option>
                         <option value="medium">average</option>
@@ -126,9 +138,6 @@ $output2 = mysqli_fetch_row($check2);
             <?php endif; ?>
 
         <script>
-            function toggleDark() {
-                document.body.classList.toggle('dark-mode');
-            }
             function openModal() {
                 document.getElementById('taskModal').style.display = 'flex';
             }
@@ -141,6 +150,8 @@ $output2 = mysqli_fetch_row($check2);
             $(document).ready(function() {
                 $('.fa-ellipsis-v').click(function() {
                     $(this).siblings('div').fadeToggle(300);
+                    $('.header .mode').fadeOut();
+
                 });
             });
             $(document).ready(function() {
@@ -149,6 +160,7 @@ $output2 = mysqli_fetch_row($check2);
 
                     if ($sw == 0) {
                         $(this).attr('status', '1');
+                        $('.header .mode').fadeOut();
 
                         $('.header button i').removeClass('fa-bars').addClass('fa-times');
                         $('.header .menu-container').css('display', 'block');
@@ -166,6 +178,17 @@ $output2 = mysqli_fetch_row($check2);
                 });
                 $('.header #upload').click(function(){
                     $('.header #file').css('display', 'block');
+                });
+                $('.header #mode').click(function(){
+                    $x = $(this).attr('status');
+
+                    if ($x == 0) {
+                        $(this).attr('status', '1');
+                        $('.header .mode').fadeIn();
+                    }else{
+                        $(this).attr('status', '0');
+                        $('.header .mode').fadeOut();
+                    }
                 });
             });
 

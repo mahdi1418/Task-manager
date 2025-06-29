@@ -15,7 +15,6 @@ if (isset($_POST['submit-task'])) {
         'user_id' => $userNumber
     ];
     $insert = db_insert('task', $data);
-    // $insert = mysqli_query($conn, "INSERT INTO `task` (`title`,`option`,`user_id`) VALUES ('$title','$option','$userNumber')");
     if ($insert) {
         $success = 'Added task successfully';
         require_once 'panel.php';
@@ -31,8 +30,7 @@ if (isset($_POST['submit-task'])) {
     $updateoption = $_POST['option'];
     $id = $_POST['taskID'];
     
-    $update = mysqli_query($conn, "UPDATE `task` SET `title`= '$updatetitle' WHERE `task`.`task_id` = '$id'");
-    // $update = mysqli_query($conn, "UPDATE `task` SET `title`= '$updatetitle',`option` = `$updateoption` WHERE `task`.`task_id` = '$id'");
+    $update = mysqli_query($conn, "UPDATE `task` SET `title`= '$updatetitle', `option`='$updateoption' WHERE `task`.`task_id` = '$id'");
     header('location: panel.php');
 
 }else if(isset($_GET['n_id']) && !empty($_GET['n_id'])){
@@ -56,7 +54,16 @@ if (isset($_POST['submit-task'])) {
         require_once 'panel.php';
         exit;
     }
-    // header('location: panel.php');
+}else if(isset($_POST['mode']) && $_POST['mode'] === 'toggleDarkMode') {
+    if(isset($_COOKIE['darkMode']) && $_COOKIE['darkMode'] === 'on'){
+        $newMode = 'off';
+    }else{
+        $newMode = 'on';
+    }
+    setcookie('darkMode', $newMode, time() + 86400,'/');
+
+    header('location: panel.php');
+    exit;
 }else {
     header('location: panel.php');
 }

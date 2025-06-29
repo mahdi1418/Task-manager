@@ -35,11 +35,9 @@ if (strlen($pass) <= 3) {
     require_once 'index.php';
     exit;
 }
-$conn = db_connection();
 
 $sql = "SELECT * FROM `users` WHERE `email` = '$email'";
 $check = db_select_one($sql);
-// $check = mysqli_query($conn, "SELECT * FROM `users` WHERE `email` = '$email'");
 if ($check) {
     if (mysqli_num_rows($check) > 0) {
         $error = 'Email is already registered.';
@@ -55,7 +53,6 @@ $data=[
     'password' => $password
 ];
 $insert = db_insert('users',$data);
-// $insert = mysqli_query($conn, "INSERT INTO `users` (`name`,`email`,`password`) VALUES ('$name','$email','$password')");
 
 if ($insert) {
     $success = 'registered successfully';
