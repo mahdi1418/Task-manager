@@ -37,8 +37,10 @@ if (isset($_POST['submit'])) {
         }
         $result = db_insert('users', $data);
         if ($result) {
-            $success = "user added successfully, you may now login";
-            header("location:$base_url/login");
+            $msql = mysqli_query(db_conn(), $sql);
+            $user = mysqli_fetch_assoc($msql);
+            $_SESSION['user'] = $user['user_id'];
+            header("location:$base_url/panel");
             exit;
         } else {
             $error = "something went wrong! please try again later";
