@@ -9,11 +9,16 @@ $userNumber = $_SESSION['user'];
 if (isset($_POST['submit-task'])) {
     $title = $_POST['title'];
     $option = $_POST['option'];
+    $date = $_POST['date'];
+    $time = $_POST['time'];
+    $due = $date .' '. $time . ':00';
     $data = [
         'title' => $title,
         'option' => $option,
-        'user_id' => $userNumber
+        'user_id' => $userNumber,
+        'due_datetime' => $due
     ];
+    
     $insert = db_insert('task', $data);
     if ($insert) {
         $success = 'Added task successfully';
@@ -63,6 +68,31 @@ if (isset($_POST['submit-task'])) {
     setcookie('darkMode', $newMode, time() + 86400,'/');
 
     header('location: panel.php');
+    exit;
+}else if(isset($_POST['checkbox'])) {
+    $tid = $_POST['tid'];
+    $status = $_POST['status'];
+    if($status == 0){
+        $status = 1;
+    }else{
+        $status = 0;
+    }
+    $update = mysqli_query($conn, "UPDATE `task` SET `status`= '$status' WHERE `task_id` = '$tid'");
+
+    header('location: panel.php');
+    exit;
+
+}else if(isset($_POST['checkbox2'])) {
+    $tid = $_POST['tid'];
+    $status = $_POST['status'];
+    if($status == 0){
+        $status = 1;
+    }else{
+        $status = 0;
+    }
+    $update = mysqli_query($conn, "UPDATE `task` SET `status`= '$status' WHERE `task_id` = '$tid'");
+
+    header('location: show-alltask.php');
     exit;
 }else {
     header('location: panel.php');

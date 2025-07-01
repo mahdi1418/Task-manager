@@ -13,7 +13,7 @@ $conn = db_connection();
 $check = mysqli_query($conn, "SELECT * FROM `task` WHERE `user_id` = '$userNumber'");
 $num_rows = mysqli_num_rows($check);
 $output = mysqli_fetch_all($check, MYSQLI_NUM);
-$darkMode = isset($_COOKIE['darkMode']) && $_COOKIE['darkMode'] ==='on';
+$darkMode = isset($_COOKIE['darkMode']) && $_COOKIE['darkMode'] === 'on';
 
 ?>
 <!DOCTYPE html>
@@ -33,13 +33,17 @@ $darkMode = isset($_COOKIE['darkMode']) && $_COOKIE['darkMode'] ==='on';
             .delete {
                 display: none;
             }
-            .task{
+
+            .task {
                 width: 95% !important;
+
             }
-            .container{
+
+            .container {
                 width: 1200px !important;
             }
-            .text-dark{
+
+            .text-dark {
                 position: absolute;
                 right: 50px;
                 top: 50px;
@@ -51,20 +55,29 @@ $darkMode = isset($_COOKIE['darkMode']) && $_COOKIE['darkMode'] ==='on';
         </style>
     </head>
 
-    <body class="<?php if($darkMode){
-        echo 'dark-mode';
-    }else{
-        echo '';
-    } ?>">
-    <a href="panel.php" class="t-none text-dark">🚪Exit</a>
+    <body class="<?php if ($darkMode) {
+                        echo 'dark-mode';
+                    } else {
+                        echo '';
+                    } ?>">
 
-        <div id="task-list" class="container m-0">
+        <div id="task-list" class="container m-0 pt-4">
+            <div class="d-flex justify-content-between mb-2 align-items-baseline">
                 <h1>All Tasks</h1>
+                <a href="panel.php" class="btn btn-outline-secondary">
+                    <i class="fas fa-door-open me-2"></i>exit
+                </a>
+            </div>
             <?php
             for ($i = 0; $i < $num_rows; $i++) {
-                for ($j = 0; $j < 4; $j++) {
+                for ($j = 0; $j < 7; $j++) {
                     $out[$i][$j] = $output[$i][$j];
                 }
+                $current_datetime = time();
+                $task_datetime = $out[$i][6];
+                $is_expired = (strtotime($task_datetime) < $current_datetime);
+                $bg_time = $is_expired ? '#ff6b6b' : '#2ed573 ';
+
                 if ($out[$i][3] == "medium") {
                     $border = 'priority-medium';
                     $color = 'color-medium';
@@ -75,15 +88,31 @@ $darkMode = isset($_COOKIE['darkMode']) && $_COOKIE['darkMode'] ==='on';
                     $border = 'priority-low';
                     $color = 'color-low';
                 }
+                if ($out[$i][2] == 1) {
+                    $checkbox = 'd-block';
+                } else {
+                    $checkbox = 'd-none';
+                }
             ?>
                 <div class="task <?php echo $border; ?>">
-                    <input status="" type="checkbox">
-                    <label><a class="t-none p-2 <?php echo $color; ?>" href="<?php echo $config['base_url']; ?>/templates/edit-task.php?t_id=<?php echo $out[$i][0]; ?>&t_title=<?php echo $out[$i][1]; ?>&t_border=<?php echo $border; ?>"><?php echo $out[$i][1]; ?></a></label>
-                    <div class="delete">
-                        <a href="<?php echo $config['base_url']; ?>/templates/task.php?n_id=<?php echo $out[$i][0] ?>" class="cursor-pointer btn">Delete</a>
-                        <!-- <a href="#"></a> -->
+                    <div class="d-flex" style="width: 100%; height: 87%;">
+
+                        <form action="task.php" method="POST" style="margin-top: -5px;">
+                            <input type="hidden" name="tid" value="<?php echo $out[$i][0]; ?>">
+                            <input type="hidden" name="status" value="<?php echo $out[$i][2]; ?>">
+                            <button status="<?php echo $out[$i][2]; ?>" type="submit" name="checkbox2" id="checkbutton" class="<?php echo $color; ?>"><i class="<?php echo $checkbox; ?> fas fa-check text-primary position-absolute" id="check"></i></button>
+                        </form>
+                        <label><a class="t-none p-2 <?php echo $color; ?>" href="<?php echo $config['base_url']; ?>/templates/edit-task.php?t_id=<?php echo $out[$i][0]; ?>&t_title=<?php echo $out[$i][1]; ?>&t_border=<?php echo $border; ?>"><?php echo $out[$i][1]; ?></a></label>
+                        <div class="delete">
+                            <a href="<?php echo $config['base_url']; ?>/templates/task.php?n_id=<?php echo $out[$i][0] ?>" class="cursor-pointer btn">Delete</a>
+                        </div>
+                        <i class="fas fa-ellipsis-v px-3 py-2 mt-2 pe-1 cursor-pointer"></i>
                     </div>
-                    <i class="fas fa-ellipsis-v px-3 py-2 mt-2 pe-1 cursor-pointer"></i>
+                    <p class="ps-2 py-1 mb-2 rounded-3" style="width: 17%; background-color: <?= $bg_time ?>;color:var(--text-color)">
+                        <?=
+                        htmlspecialchars($task_datetime);
+                        ?>
+                    </p>
                 </div>
             <?php
             }
