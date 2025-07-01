@@ -1,15 +1,15 @@
 <?php
-require_once '../loader.php';
+require_once 'loader.php';
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
 if (!isset($_SESSION['user'])) {
-    header('location: login.php');
+    header("location:$base_url/login");
 }
 $userNumber = $_SESSION['user'];
-$conn = db_connection();
+$conn = db_conn();
 $check = mysqli_query($conn, "SELECT * FROM `task` WHERE `user_id` = '$userNumber'");
 $num_rows = mysqli_num_rows($check);
 $output = mysqli_fetch_all($check, MYSQLI_NUM);
@@ -18,16 +18,12 @@ $darkMode = isset($_COOKIE['darkMode']) && $_COOKIE['darkMode'] === 'on';
 ?>
 <!DOCTYPE html>
 <html">
-
-    <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href="../assessts/css/bootstrap.min.css" rel="stylesheet">
-        <link href="../assessts/css/all.min.css" rel="stylesheet">
-        <link href="../assessts/css/style-panel.css" rel="stylesheet">
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-        <script src="../assessts/js/jquery-3.7.1.min.js"></script>
-        <script src="../assessts/js/bootstrap.bundle.min.js"></script>
-        <script src="../assessts/js/main.js"></script>
+       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="<?php echo base_url(); ?>/assessts/css/bootstrap.min.css" rel="stylesheet">
+        <link href="<?php echo base_url(); ?>/assessts/css/all.min.css" rel="stylesheet">
+        <link href="<?php echo base_url(); ?>/assessts/css/style-panel.css" rel="stylesheet">
+        <script src="<?php echo base_url(); ?>/assessts/js/jquery-3.7.1.min.js"></script>
+        <script src="<?php echo base_url(); ?>/assessts/js/bootstrap.bundle.min.js"></script>
         <title> </title>
         <style>
             .delete {
@@ -62,8 +58,8 @@ $darkMode = isset($_COOKIE['darkMode']) && $_COOKIE['darkMode'] === 'on';
                     } ?>">
 
         <div id="task-list" class="container m-0 pt-4">
-            <div class="d-flex justify-content-between mb-2 align-items-baseline">
-                <h1>All Tasks</h1>
+            <div class="d-flex justify-content-between mb-3">
+                <h1 class="m-0 mt-3">All Tasks</h1>
                 <a href="panel.php" class="btn btn-outline-secondary">
                     <i class="fas fa-door-open me-2"></i>exit
                 </a>
@@ -97,14 +93,14 @@ $darkMode = isset($_COOKIE['darkMode']) && $_COOKIE['darkMode'] === 'on';
                 <div class="task <?php echo $border; ?>">
                     <div class="d-flex" style="width: 100%; height: 87%;">
 
-                        <form action="task.php" method="POST" style="margin-top: -5px;">
+                        <form action="handle.php" method="POST" style="margin-top: -5px;">
                             <input type="hidden" name="tid" value="<?php echo $out[$i][0]; ?>">
                             <input type="hidden" name="status" value="<?php echo $out[$i][2]; ?>">
                             <button status="<?php echo $out[$i][2]; ?>" type="submit" name="checkbox2" id="checkbutton" class="<?php echo $color; ?>"><i class="<?php echo $checkbox; ?> fas fa-check text-primary position-absolute" id="check"></i></button>
                         </form>
-                        <label><a class="t-none p-2 <?php echo $color; ?>" href="<?php echo $config['base_url']; ?>/templates/edit-task.php?t_id=<?php echo $out[$i][0]; ?>&t_title=<?php echo $out[$i][1]; ?>&t_border=<?php echo $border; ?>"><?php echo $out[$i][1]; ?></a></label>
+                        <label><a class="t-none p-2 <?php echo $color; ?>" href="<?php echo $config['base_url']; ?>/edit?t_id=<?php echo $out[$i][0]; ?>&t_title=<?php echo $out[$i][1]; ?>&t_border=<?php echo $border; ?>"><?php echo $out[$i][1]; ?></a></label>
                         <div class="delete">
-                            <a href="<?php echo $config['base_url']; ?>/templates/task.php?n_id=<?php echo $out[$i][0] ?>" class="cursor-pointer btn">Delete</a>
+                            <a href="<?php echo $config['base_url']; ?>/handle.php?task_id=<?php echo $out[$i][0] ?>" class="cursor-pointer btn">Delete</a>
                         </div>
                         <i class="fas fa-ellipsis-v px-3 py-2 mt-2 pe-1 cursor-pointer"></i>
                     </div>

@@ -3,32 +3,32 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 $userNumber = $_SESSION['user'];
-
+if (!isset($_SESSION['user'])) {
+    header("location:$base_url/login");
+}
 if (isset($_GET['t_id']) && isset($_GET['t_title'])) {
     $id = $_GET['t_id'];
     $title = $_GET['t_title'];
     $border = $_GET['t_border'];
-    // $data = [
-    //     'task_id' => $id,
-    //     'title' => $title
-    // ];
 ?>
     <!DOCTYPE html>
     <html lang="en">
 
+
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href="../assessts/css/bootstrap.min.css" rel="stylesheet">
-        <link href="../assessts/css/all.min.css" rel="stylesheet">
-        <link href="../assessts/css/style-panel.css" rel="stylesheet">
-        <script src="../assessts/js/bootstrap.bundle.min.js"></script>
+        <link href="<?php echo base_url(); ?>/assessts/css/bootstrap.min.css" rel="stylesheet">
+        <link href="<?php echo base_url(); ?>/assessts/css/all.min.css" rel="stylesheet">
+        <link href="<?php echo base_url(); ?>/assessts/css/style-panel.css" rel="stylesheet">
+        <script src="<?php echo base_url(); ?>/assessts/js/jquery-3.7.1.min.js"></script>
+        <script src="<?php echo base_url(); ?>/assessts/js/bootstrap.bundle.min.js"></script>
         <title> </title>
         <style>
             form {
                 height: 90%;
                 width: 90%;
                 text-align: center;
-                }
+            }
 
             textarea {
                 outline: none;
@@ -60,9 +60,8 @@ if (isset($_GET['t_id']) && isset($_GET['t_title'])) {
         </style>
     </head>
 
-    <body>
-        <form action="task.php" method="POST">
-
+<body>
+        <form action="handle.php" method="POST">
             <div class=" <?php echo $border; ?>">
                 <textarea for="task-41cmrn9z6" name="title"><?php echo $title; ?></textarea>
             </div>

@@ -166,28 +166,6 @@
         cursor: pointer;
     }
 
-    @media (max-width: 500px) {
-        h1 {
-            font-size: 20px;
-        }
-
-        .container {
-            padding: 20px;
-        }
-
-        .task label {
-            font-size: 14px;
-        }
-
-        .add-button {
-            width: 50px;
-            height: 50px;
-            font-size: 28px;
-        }
-    }
-
-
-
     .header {
         background-color: var(--container-bg);
         padding: 15px 20px;
@@ -242,7 +220,7 @@
         border-left: 1px solid #d63384;
         border-top: 1px solid #d63384;
         border-radius: 10px 0 10px 0;
-        margin-top: 73px;
+        margin-top: 73.5px;
         width: 480px;
         overflow: hidden;
     }
@@ -323,7 +301,7 @@
     }
 
     .alert {
-        top: 50px !important;
+        top: 70px !important;
         right: 50%;
         transform: translateX(50%);
     }

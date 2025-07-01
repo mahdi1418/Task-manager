@@ -1,15 +1,15 @@
 <?php
-require_once '../loader.php';
+require_once 'loader.php';
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
 if (!isset($_SESSION['user'])) {
-    header('location: login.php');
+    header("location:$base_url/login");
 }
 $userNumber = $_SESSION['user'];
-$conn = db_connection();
+$conn = db_conn();
 
 if (isset($_POST['sort'])) {
     $sort = $_POST['sort_by'];
@@ -54,7 +54,7 @@ require_once 'header2.php';
         <div class="d-flex gap-3">
             <div class="position-relative">
                 <button id="mode" status="0">Dark mod 🌓</button>
-                <form action="task.php" method="POST" class="mode position-absolute">
+                <form action="handle.php" method="POST" class="mode position-absolute">
                     <input type="hidden" name="mode" value="toggleDarkMode">
                     <button type="submit" name="darkModeBtn"><?php if ($darkMode) {
                                                                     echo 'light';
@@ -87,22 +87,22 @@ require_once 'header2.php';
         <div class="menu-container position-absolute">
             <ul class="menu d-flex flex-column gap-2">
                 <li class="d-flex gap-3">
-                    <div id="photo"><img src="<?php echo base_url() . 'uploads/' . $output2['4']; ?>"></div>
+                    <div id="photo"><img src="<?php echo base_url() . '/uploads/' . $output2['4']; ?>"></div>
                     <p class="m-0 align-content-center"><?php echo $output2['1']; ?></p>
                 </li>
                 <li>
                     <i class="fas fa-camera me-3"></i><button id="upload">upload a photo</button>
-                    <form action="task.php" method="POST" enctype="multipart/form-data" id="file">
+                    <form action="handle.php" method="POST" enctype="multipart/form-data" id="file">
                         <input type="file" name="files" id="files">
                         <button type="submit" name="uploadfile" class="border p-2 up">upload</button>
                     </form>
                 </li>
                 <li><button onclick="openModal()"><i class="fas fa-plus me-3"></i>add a task</button></li>
-                <li><a href="show-alltask.php" class="t-none"><i class="fa-solid fa-quote-right me-2"></i>Show all tasks</a></li>
+                <li><a href="<?php base_url() ?>alltask" class="t-none"><i class="fa-solid fa-quote-right me-2"></i>Show all tasks</a></li>
                 <!-- <li><a href="" class="t-none"><i class="fas fa-pen me-2"></i>edit a task</a></li> -->
                 <!-- <li><a href="" class="t-none"><i class="fas fa-cog me-2"></i>settings</a></li> -->
                 <li></li>
-                <li class="exit"><a href="logout.php" class="t-none">🚪Sign out</a></li>
+                <li class="exit"><a href="<?php base_url() ?>logout" class="t-none">🚪Sign out</a></li>
             </ul>
         </div>
     </div>
@@ -137,14 +137,14 @@ require_once 'header2.php';
             ?>
                 <div class="task <?php echo $border; ?> col-4">
                     <div class="d-flex" style="width: 100%; height: 87%;">
-                        <form action="task.php" method="POST" style="margin-top: -5px;">
+                        <form action="handle.php" method="POST" style="margin-top: -5px;">
                             <input type="hidden" name="tid" value="<?php echo $out[$i][0]; ?>">
                             <input type="hidden" name="status" value="<?php echo $out[$i][2]; ?>">
                             <button status="<?php echo $out[$i][2]; ?>" type="submit" name="checkbox" id="checkbutton" class="<?php echo $color; ?>"><i class="<?php echo $checkbox; ?> fas fa-check text-primary position-absolute" id="check"></i></button>
                         </form>
-                        <label><a class="t-none p-2 <?php echo $color; ?>" href="<?php echo $config['base_url']; ?>templates/edit-task.php?t_id=<?php echo $out[$i][0]; ?>&t_title=<?php echo $out[$i][1]; ?>&t_border=<?php echo $border; ?>"><?php echo $out[$i][1]; ?></a></label>
+                        <label><a class="t-none p-2 <?php echo $color; ?>" href="<?php echo $config['base_url']; ?>/edit?t_id=<?php echo $out[$i][0]; ?>&t_title=<?php echo $out[$i][1]; ?>&t_border=<?php echo $border; ?>"><?php echo $out[$i][1]; ?></a></label>
                         <div class="delete">
-                            <a href="<?php echo $config['base_url']; ?>templates/task.php?n_id=<?php echo $out[$i][0] ?>" class="cursor-pointer btn">Delete</a>
+                            <a href="<?php echo $config['base_url']; ?>/handle.php?task_id=<?php echo $out[$i][0] ?>" class="cursor-pointer btn">Delete</a>
                         </div>
                         <i class="fas fa-ellipsis-v px-3 py-2 pe-1 cursor-pointer"></i>
                     </div>
@@ -166,7 +166,7 @@ require_once 'header2.php';
 
     <button class="add-button" onclick="openModal()">+</button>
 
-    <form action="task.php" method="post">
+    <form action="handle.php" method="post">
         <div class="modal" id="taskModal">
             <div class="modal-content">
                 <h3 style="color:#d63384;text-align:center;">add task</h3>
@@ -247,7 +247,6 @@ require_once 'header2.php';
                 }
             });
         });
-
         setTimeout(function() {
             var alertBox = document.getElementById('alert-box');
             if (alertBox) {

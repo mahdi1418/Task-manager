@@ -1,6 +1,5 @@
-<?php
+<?php 
 global $config;
-
 $config = [
     'db' => [
         'name' => 'tasks',
@@ -8,9 +7,5 @@ $config = [
         'password' => '',
         'host' => 'localhost'
     ],
-    'base_url' => 'http://localhost/task-manager/'
+    'base_url' => 'http://localhost/task-manager'
 ];
-
-
-
-?>
