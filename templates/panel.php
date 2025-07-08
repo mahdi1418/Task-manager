@@ -1,6 +1,6 @@
 <?php
 require_once 'loader.php';
-
+// date_default_timezone_set('Asia/Tehran');
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -11,26 +11,28 @@ if (!isset($_SESSION['user'])) {
 $userNumber = $_SESSION['user'];
 $conn = db_conn();
 
-if (isset($_POST['sort'])) {
-    $sort = $_POST['sort_by'];
+$check2 = mysqli_query($conn, "SELECT * FROM `users` WHERE `user_id` = '$userNumber'");
+$num_rows2 = mysqli_num_rows($check2);
+$output2 = mysqli_fetch_row($check2);
+$sort = $output2[6];
+if (isset($_GET['sort'])) {
+    $sort = $_GET['sort'];
     if ($sort == 'recent') {
         $sort = "`create_date` DESC";
     } else if ($sort == 'status_asc') {
         $sort = "`status` ASC";
     } else if ($sort == 'status_desc') {
         $sort = "`status` DESC";
+    } else {
+        $sort = "`create_date` DESC";
     }
-} else {
-    $sort = "`create_date` DESC";
-}
+    $conn = db_conn();
 
+    $update = mysqli_query($conn, "UPDATE `users` SET `sort`= '$sort' WHERE `user_id` = '$userNumber'");
+}
 $check = mysqli_query($conn, "SELECT * FROM `task` WHERE `user_id` = '$userNumber' ORDER BY $sort");
 $num_rows = mysqli_num_rows($check);
 $output = mysqli_fetch_all($check, MYSQLI_NUM);
-
-$check2 = mysqli_query($conn, "SELECT * FROM `users` WHERE `user_id` = '$userNumber'");
-$num_rows2 = mysqli_num_rows($check2);
-$output2 = mysqli_fetch_row($check2);
 
 $darkMode = isset($_COOKIE['darkMode']) && $_COOKIE['darkMode'] === 'on';
 require_once 'header2.php';
@@ -51,7 +53,7 @@ require_once 'header2.php';
                 } ?>">
     <div class="laye"></div>
     <div class="header">
-        <div class="d-flex gap-3">
+        <div class="d-flex gap-3 align-items-baseline">
             <div class="position-relative">
                 <button id="mode" status="0">Dark mod 🌓</button>
                 <form action="handle.php" method="POST" class="mode position-absolute">
@@ -63,22 +65,26 @@ require_once 'header2.php';
                                                                 } ?></button>
                 </form>
             </div>
+            <div style="color: var(--text-color);">Sort by:</div>
 
-            <form method="POST" action="">
-                <label for="sort_by" style="color: var(--text-color);">Sort by:</label>
-                <select name="sort_by" id="sort_by" class="form-select w-auto d-inline-block">
-                    <option value="recent">
-                        Recent
-                    </option>
-                    <option value="status_desc">
-                        Completed
-                    </option>
-                    <option value="status_asc">
-                        in Progress
-                    </option>
-                </select>
-                <button type="submit" name="sort">click</button>
-            </form>
+            <div class="custom-select">
+                <div class="select-btn"><?php
+                                        if ($sort == "`create_date` DESC") {
+                                            $sort = "Recent";
+                                        } else if ($sort == "`status` ASC") {
+                                            $sort = "in Progress";
+                                        } else if ($sort == "`status` DESC") {
+                                            $sort = "Completed";
+                                        } else {
+                                            $sort = "Recent";
+                                        }
+                                        echo $sort; ?></div>
+                <div class="select-options">
+                    <a class="dropdown-item" href="<?php echo $config['base_url']; ?>/panel?sort=recent">Recent</a>
+                    <a class="dropdown-item" href="<?php echo $config['base_url']; ?>/panel?sort=status_desc">Completed</a>
+                    <a class="dropdown-item" href="<?php echo $config['base_url']; ?>/panel?sort=status_asc">in Progress </a>
+                </div>
+            </div>
         </div>
         <h1 class="position-absolute">Task Manager</h1>
 
@@ -106,7 +112,6 @@ require_once 'header2.php';
             </ul>
         </div>
     </div>
-
     <div class="container">
         <div id="task-list" class="row d-flex justify-content-between">
             <?php
@@ -116,9 +121,14 @@ require_once 'header2.php';
                 }
                 $current_datetime = time();
                 $task_datetime = $out[$i][6];
-                $is_expired = (strtotime($task_datetime) <$current_datetime);
+                $is_expired = (strtotime($task_datetime) < $current_datetime);
+                if ($current_datetime + 260000 > strtotime($task_datetime) && strtotime($task_datetime) > $current_datetime) {
+                    $bg_time = '#ffa502';
+                }else{
                 $bg_time = $is_expired ? '#ff6b6b' : '#2ed573 ';
-
+                    
+                }
+                $remain = strtotime($task_datetime) - $current_datetime;
                 if ($out[$i][3] == "medium") {
                     $border = 'priority-medium';
                     $color = 'color-medium';
@@ -148,13 +158,13 @@ require_once 'header2.php';
                         </div>
                         <i class="fas fa-ellipsis-v px-3 py-2 pe-1 cursor-pointer"></i>
                     </div>
-
-                    <p class="w-50 ps-2 py-1 mb-2 rounded-3" style="background-color: <?= $bg_time ?>;color:var(--text-color)">
-                        <?= 
-                        htmlspecialchars($task_datetime);
-                     ?>
-                    </p>
-
+                    <div class="d-flex">
+                        <p class="w-50 ps-2 py-1 mb-2 me-1 rounded-3" style="background-color: <?= $bg_time ?>;color:var(--text-color)">
+                            <?=
+                            htmlspecialchars($task_datetime);
+                            ?>
+                        </p>
+                    </div>
 
 
                 </div>
@@ -171,8 +181,8 @@ require_once 'header2.php';
             <div class="modal-content">
                 <h3 style="color:#d63384;text-align:center;">add task</h3>
                 <input type="text" id="taskTitle" placeholder="title" name="title" required>
-                <input type="date" name="date" required>
-                <input type="time" name="time" required>
+                <input type="date" name="date" value="<?php echo date('Y-m-d'); ?>" required>
+                <input type="time" name="time" value="<?php echo date("H:i"); ?>" required>
                 <select id="taskPriority" name="option">
                     <option value="high">important</option>
                     <option value="medium">average</option>

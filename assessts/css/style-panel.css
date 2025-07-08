@@ -42,7 +42,7 @@
         font-size: 24px;
         top: 50%;
         right: 50%;
-        transform: translate(50%,-50%);
+        transform: translate(50%, -50%);
 
     }
 
@@ -63,7 +63,8 @@
         position: relative;
         background-color: var(--container-bg);
     }
-    #check{
+
+    #check {
         top: 0;
         right: 0;
         display: none;
@@ -177,8 +178,9 @@
         margin-left: -630px;
         display: flex;
         justify-content: space-between;
-            z-index: 10;
+        z-index: 10;
     }
+
     .header button {
         background-color: var(--bg-color);
         border: none;
@@ -315,6 +317,45 @@
         bottom: 0;
         display: none;
         background-color: #0c0c0c8d !important;
-          z-index: 1;
+        z-index: 1;
     }
 
+    .header .custom-select {
+        position: relative !important;
+        display: inline-block;
+        width: 200px;
+    }
+
+    .select-btn {
+        padding: 8px 15px;
+        background: #f8f9fa;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        cursor: pointer;
+        width: 100%;
+    }
+
+    .select-options {
+        display: none;
+        position: absolute;
+        width: 100%;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        z-index: 100;
+    }
+
+    .custom-select:hover .select-options {
+        display: block;
+    }
+
+    .select-options a {
+        display: block;
+        padding: 8px 15px;
+        text-decoration: none;
+        color: #333;
+    }
+
+    .select-options a:hover {
+        background: #f0f0f0;
+    }
