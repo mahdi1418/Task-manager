@@ -359,3 +359,17 @@
     .select-options a:hover {
         background: #f0f0f0;
     }
+
+    .inputsearch {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background: #f8f9fa;
+    }
+
+    .search {
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: transparent !important;
+        color: #333;
+    }

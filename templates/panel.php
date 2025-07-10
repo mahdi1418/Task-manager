@@ -27,12 +27,19 @@ if (isset($_GET['sort'])) {
         $sort = "`create_date` DESC";
     }
     $conn = db_conn();
-
     $update = mysqli_query($conn, "UPDATE `users` SET `sort`= '$sort' WHERE `user_id` = '$userNumber'");
 }
 $check = mysqli_query($conn, "SELECT * FROM `task` WHERE `user_id` = '$userNumber' ORDER BY $sort");
 $num_rows = mysqli_num_rows($check);
 $output = mysqli_fetch_all($check, MYSQLI_NUM);
+
+if (isset($_GET['submitSearch'])) {
+    $conn = db_conn();
+    $title = $_GET['search'];
+
+    $select = mysqli_query($conn, "SELECT * FROM `task` WHERE `user_id` = '$userNumber' AND `title`= '$title'");
+    $search = mysqli_fetch_row($select);
+}
 
 $darkMode = isset($_COOKIE['darkMode']) && $_COOKIE['darkMode'] === 'on';
 require_once 'header2.php';
@@ -88,8 +95,15 @@ require_once 'header2.php';
         </div>
         <h1 class="position-absolute">Task Manager</h1>
 
-        <button class="bars"><i class="fa-solid fa-bars" status="0"></i></button>
-
+        <div class="d-flex gap-2 align-items-baseline">
+            <div class="cursor-pointer">
+                <form method="GET" action="" class="position-relative">
+                    <input placeholder="search task" type="text" class="p-2 inputsearch" name="search">
+                    <button type="submit" name="submitSearch" class="search position-absolute p-2 ps-3"><i class="fa-solid fa-search"></i></button>
+                </form>
+            </div>
+            <button class="bars"><i class="fa-solid fa-bars" status="0"></i></button>
+        </div>
         <div class="menu-container position-absolute">
             <ul class="menu d-flex flex-column gap-2">
                 <li class="d-flex gap-3">
@@ -124,9 +138,8 @@ require_once 'header2.php';
                 $is_expired = (strtotime($task_datetime) < $current_datetime);
                 if ($current_datetime + 260000 > strtotime($task_datetime) && strtotime($task_datetime) > $current_datetime) {
                     $bg_time = '#ffa502';
-                }else{
-                $bg_time = $is_expired ? '#ff6b6b' : '#2ed573 ';
-                    
+                } else {
+                    $bg_time = $is_expired ? '#ff6b6b' : '#2ed573 ';
                 }
                 $remain = strtotime($task_datetime) - $current_datetime;
                 if ($out[$i][3] == "medium") {
@@ -152,7 +165,17 @@ require_once 'header2.php';
                             <input type="hidden" name="status" value="<?php echo $out[$i][2]; ?>">
                             <button status="<?php echo $out[$i][2]; ?>" type="submit" name="checkbox" id="checkbutton" class="<?php echo $color; ?>"><i class="<?php echo $checkbox; ?> fas fa-check text-primary position-absolute" id="check"></i></button>
                         </form>
-                        <label><a class="t-none p-2 <?php echo $color; ?>" href="<?php echo $config['base_url']; ?>/edit?t_id=<?php echo $out[$i][0]; ?>&t_title=<?php echo $out[$i][1]; ?>&t_border=<?php echo $border; ?>"><?php echo $out[$i][1]; ?></a></label>
+                        <label><?php
+                                if (isset($search)) {
+                                    if ($search[1] == $out[$i][1]) {
+                                        $bg_search = 'border: 3px dashed #6beaff; border-radius: 20px; background-color: white;';
+                                    } else {
+                                        $bg_search = 'border: none border-radius: 0; background-color: transeparent;';
+                                    }
+                                } else {
+                                    $bg_search = 'border: none border-radius: 0; background-color: transeparent;';
+                                } ?>
+                            <a class="t-none p-2 <?php echo $color; ?>" href="<?php echo $config['base_url']; ?>/edit?t_id=<?php echo $out[$i][0]; ?>&t_title=<?php echo $out[$i][1]; ?>&t_border=<?php echo $border; ?>" style="<?php echo $bg_search; ?>"><?php echo $out[$i][1]; ?></a></label>
                         <div class="delete">
                             <a href="<?php echo $config['base_url']; ?>/handle.php?task_id=<?php echo $out[$i][0] ?>" class="cursor-pointer btn">Delete</a>
                         </div>
@@ -165,8 +188,6 @@ require_once 'header2.php';
                             ?>
                         </p>
                     </div>
-
-
                 </div>
             <?php
             }
